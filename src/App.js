@@ -31,7 +31,7 @@ export default function App(){
     <div className="app">
       <div className="sidebar">
       <Friendlist friend={friend} />
-      {showaddfriend&&<FormaddFriend />}
+      {showaddfriend&&<FormaddFriend firen={setfriend} show={setshowaddfriend} />}
        <Button oncli={handshow}>{showaddfriend ? "close":"Add friend"}</Button>
       </div>
       <Formsplitbill />
@@ -65,24 +65,29 @@ function Friend({friend}){
   
  )
 }
-function FormaddFriend(){
+function FormaddFriend({firen,show}){
   const [name,setname]=useState('');
   const [image,setimage]=useState('https://i.pravatar.cc/48?u=499'); 
   function handaddfriend(e){
   e.preventDefault();
+ const id= crypto.randomUUID()
   const newfr={
     name,
-    image,
+    image:`${image}?=${id}`,
     balance:0,
-    id:crypto.randomUUID()
+    id,
   }
+  firen([...firen,...newfr]);
+  show(false)
+  setname('');
+
   }
 
  return (
   <form onSubmit={handaddfriend}
-  onChange={(e)=>setname(e.target.value)} className="form-add-friend">
+  className="form-add-friend">
   <label>🤷Friend name</label>
-  <input type="text" value={name}  />
+  <input type="text" onChange={(e)=>setname(e.target.value)}  value={name}  />
   <label>🌌Image URL</label>
   <input type="text" value={image} onChange={(e)=>setimage(e.target.value)}/>
   <Button>Add</Button>
